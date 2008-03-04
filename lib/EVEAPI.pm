@@ -266,6 +266,12 @@ sub has {
     return exists $self->{_cur}->{$what} ? 1 : 0;
 }
 
+sub get {
+    my ($self, $what, $default) = @_;
+
+    return $self->has($what) ? $self->{_cur}->{$what} : $default;
+}
+
 sub AUTOLOAD {
     my $self = shift;
 
