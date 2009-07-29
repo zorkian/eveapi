@@ -268,8 +268,27 @@ sub has {
 
 sub get {
     my ($self, $what, $default) = @_;
+    return $default unless $self->has($what);
 
-    return $self->has($what) ? $self->{_cur}->{$what} : $default;
+    my $new = $self->{_cur}->{$what};
+
+    # fudging for returning array
+    if (ref $new eq 'HASH' && $new->{_rowset}) {
+        return [ map { bless { _cur => $_ }, ref $self } @{$new->{_rows}} ];
+    }
+
+    # bless...
+    if (ref $new eq 'HASH') {
+        return bless { _cur => $new }, ref $self;
+    }
+
+    return $new;
+}
+
+sub keys {
+    my ($self,) = @_;
+
+    return CORE::keys %{$self->{_cur}};
 }
 
 sub AUTOLOAD {
@@ -283,25 +302,13 @@ sub AUTOLOAD {
     die "cur is not a hashref!?\n" unless ref $self->{_cur} eq 'HASH';
 
     unless (exists $self->{_cur}->{$name}) {
-        foreach my $key (keys %{$self->{_cur}}) {
+        foreach my $key (CORE::keys %{$self->{_cur}}) {
             print "$key: $self->{_cur}->{$key}\n";
         }
         die "$name not found in cur!?\n";
     }
 
-    my $new = $self->{_cur}->{$name};
-
-    # fudging for returning array
-    if (ref $new eq 'HASH' && $new->{_rowset}) {
-        return [ map { bless { _cur => $_ }, ref $self } @{$new->{_rows}} ];
-    }
-
-    # bless...
-    if (ref $new eq 'HASH') {
-        return bless { _cur => $new }, ref $self;
-    }
-
-    return $new;
+    return $self->get($name);
 }
 
 1;
