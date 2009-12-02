@@ -1,3 +1,10 @@
+0.02 - Wed Dec  2 09:31:38 UTC 2009
+
+    * add 'get' method
+    * add 'keys' method, patch by zofu
+    * add POD documentation
+    * add example files in bin/ directory
+
 0.01 - Thu Feb  7 21:00:45 UTC 2008
 
     * initial alpha release to svn repository 

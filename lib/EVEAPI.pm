@@ -1,25 +1,57 @@
 #!/usr/bin/perl
 
-###########################################################################
-# PROOF OF CONCEPT, this is one of those hacky 2AM jobs you just throw    #
-# together to see shit work... forgive the lack of comments and the       #
-# poorly thought out design                                               #
-#                                                                         #
-# This is not guaranteed to work, nor does it really have any             #
-# documentation that would allow you to use it very well.  Good luck.     #
-#                                                                         #
-# XXX: use File::Temp or something for storing temporary files?           #
-#                                                                         #
-# NOTE: presently you MUST create /tmp/api and make it writable by        #
-# whatever app is using this module.  I plan on implementing a caching    #
-# layer but haven't gotten around to it...                                #
-###########################################################################
+=head1 NAME
 
-###########################################################################
-# Copyright (c) 2007-2008 Mark Smith <mark@xb95.com>.  All rights         #
-# reserved.  This program is free software; you can redistribute it       #
-# and/or modify it under the same terms as Perl itself.                   #
-###########################################################################
+EVEAPI - a module for accessing the EVE Online API
+
+=head1 DESCRIPTION
+
+This module provides a very simple interface to the EVE Online API.  It
+understands how to cache the results, allowing you to simply use the module
+and not worry about caching.
+
+This module never needs expanding to understand new API methods released
+by CCP.  It will just work, assuming CCP continues to follow the existing
+XML patterns that were originally established when I wrote the API.  If they
+change the syntax of the XML, then this module will need updating.
+
+=head1 USAGE
+
+The module must be installed into a path that your system checks for modules.
+The easiest way to do this is to drop it in your application's directory and
+then use it, i.e.,
+
+    use EVEAPI;
+
+Assuming it's in the current directory (and you don't have taint mode on) then
+it will work.  If you have a different configuration, you're on your own.
+
+Once the module is used, create an object:
+
+    my $api = EVEAPI->new( userID => 234234, apiKey => 'sdfkljsdflkj', version => 2 );
+
+And do something with it:
+
+    my $sheet = $api->char->CharacterSheet( characterID => 234993 )->load;
+    printf "Memory: %d\n", $sheet->attributes->memory;
+    printf "Blood: %s\n", $sheet->bloodLine;
+
+See bin/test.pl in this distribution for a longer example.
+
+=head1 KNOWN ISSUES / BUGS
+
+No known bugs.  There is some room for improvement around the caching method and
+some error handling.  (And documentation.)
+    
+Patches welcome, or you can bug me enough until I get around to doing it.
+
+=head1 COPYRIGHT
+
+Copyright (c) 2007-2009 Mark Smith <mark@xb95.com>.  All rights reserved.
+This program is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+
+=cut
 
 package EVEAPI;
 
@@ -31,7 +63,7 @@ use Date::Format;
 use Data::Dumper;
 
 our $AUTOLOAD;
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 # constructor, usage:
 #   my $api = EVEAPI->new( userID => 234234, apiKey => 'sdfkljsdflkj' );
