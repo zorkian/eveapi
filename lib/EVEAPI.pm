@@ -72,9 +72,9 @@ sub new {
     my %args = ( @_ );
 
     my $self = {};
-    $self->{userID} = $args{userID}+0;
-    $self->{apiKey} = $args{apiKey};
-    $self->{version} = $args{version}+0 || 1;
+    $self->{userID} = $args{userID} || 0;
+    $self->{apiKey} = $args{apiKey} || '';
+    $self->{version} = $args{version} || 1;
     #die "requires userID and apiKey for construction\n"
     #    unless $self->{userID} && $self->{apiKey};
 
