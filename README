@@ -1,5 +1,11 @@
-Alpha alpha alpha release of the EVEAPI Perl module.
+The EVEAPI Perl Module
 
-For comments, find me on Coldfront IRC as xb95, or email me mark@xb95.com ...
+Yes, the module is up to date. It works on all of the new API methods,
+because the EVE API was designed in a very predictable fashion with well
+behaved XML. Module authors don't have to update their modules every
+time CCP releases something. It Just Works.
 
-Ta for now.
+For comments, find me on Coldfront IRC as xb95, or email me
+mark@xb95.com -- or submit patches here on GitHub.
+
+Thanks for looking.
